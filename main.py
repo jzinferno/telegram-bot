@@ -1,7 +1,10 @@
+#!/usr/bin/env python3
+
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait
 from pyrogram.raw import functions
 from config import api_id, api_hash
+from gtts import gTTS
 from time import sleep
 import subprocess
 import os
@@ -22,8 +25,8 @@ async def version(_, msg):
 
 @app.on_message(filters.command("audio", prefixes=".") & filters.me)
 async def audio(_, msg):
-    subprocess.run(['rm', '-rf', 'audio.mp3'])
-    subprocess.run(['gtts-cli', ''.join(msg.command[2:]), '--lang', ''.join(msg.command[1]), '--nocheck', '--output', 'audio.mp3'])
+    tts = gTTS(''.join(msg.command[2:]), lang=''.join(msg.command[1]))
+    tts.save('audio.mp3')
     await app.send_audio(msg.chat.id, "audio.mp3", title="User Audio Bot", performer="jzinferno", thumb="fire.jpg")
 
 app.run()
